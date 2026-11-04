@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>내 삶을 풍성하게 하는 AI 콘텐츠 만들기</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Bebas+Neue&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black:#000; --white:#fff; --red:#FF2A2A;
+    --card:#111; --card-hover:#1c1c1c; --line:#262626;
+    --text-2:#D0D0D0;   /* 참고 사이트(#AAA)보다 밝게: 시니어 가독성 */
+    --text-3:#9A9A9A;   /* 참고 사이트(#666)보다 밝게 */
+    --f-title:'Black Han Sans',sans-serif;
+    --f-body:'Noto Sans KR',sans-serif;
+    --f-num:'Bebas Neue',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--black);color:var(--white)}
+  body{font-family:var(--f-body);font-size:18px;line-height:1.75;-webkit-font-smoothing:antialiased}
+  button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+  a{color:inherit}
+  :focus-visible{outline:3px solid var(--red);outline-offset:3px}
+
+  /* ---------- Header ---------- */
+  .hdr{position:sticky;top:0;z-index:20;background:rgba(0,0,0,.92);backdrop-filter:blur(6px);
+       border-bottom:1px solid var(--red)}
+  .hdr-in{max-width:1240px;margin:0 auto;padding:16px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .logo{font-family:var(--f-num);font-size:30px;letter-spacing:2px;line-height:1;text-decoration:none}
+  .logo b{color:var(--red);font-weight:400}
+  .hdr-btn{border:1px solid #555;padding:9px 18px;font-size:16px;text-decoration:none;white-space:nowrap}
+  .hdr-btn:hover{border-color:var(--white)}
+
+  .wrap{max-width:1240px;margin:0 auto;padding:0 28px}
+
+  /* ---------- Home ---------- */
+  /* ---------- Intro (사진 + 물방울) ---------- */
+  .intro{position:relative;height:calc(100vh - 63px);min-height:560px;overflow:hidden;background:#000}
+  .intro-photo{position:absolute;top:0;bottom:0;right:max(0px,calc((100vw - 1240px)/2 - 40px));height:100%;aspect-ratio:864/1080;max-width:62%;
+    -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 38%,#000 72%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 38%,#000 72%,transparent 100%);
+    background:url(img/hero_me.jpg) center 18%/cover no-repeat;filter:brightness(.78) contrast(1.05);
+    animation:photoIn 2.2s ease-out both}
+  @keyframes photoIn{from{opacity:0;transform:scale(1.06)}to{opacity:1;transform:none}}
+  .intro-shade{position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(90deg,rgba(0,0,0,.55) 0%,rgba(0,0,0,.25) 45%,rgba(0,0,0,0) 70%),
+               linear-gradient(0deg,#000 0%,rgba(0,0,0,0) 30%)}
+  #drops{position:absolute;inset:0;width:100%;height:100%;z-index:1}
+  .intro-txt{position:absolute;z-index:2;left:max(28px,calc((100vw - 1240px)/2 + 28px));bottom:12vh;max-width:none}
+  .intro-title{font-family:var(--f-title);font-weight:400;font-size:clamp(40px,min(4.1vw,7.4vh),66px);line-height:1.18;margin:8px 0 26px;word-break:keep-all}
+  .intro-title .ln{display:block;white-space:nowrap}
+  .intro-title .wd{white-space:nowrap}
+  .intro-title .red{color:var(--red);text-shadow:0 0 28px rgba(255,42,42,.35)}
+  .intro-title .green{color:#00FF00;text-shadow:0 0 24px rgba(0,255,0,.25)}
+  .intro-title .ch{display:inline-block;opacity:0;transform:translateY(18px);filter:blur(6px);
+    transition:opacity .5s ease,transform .5s ease,filter .5s ease}
+  .intro-title .ch.on{opacity:1;transform:none;filter:none}
+  .eyebrow{font-family:var(--f-num);font-size:22px;letter-spacing:3px;color:var(--text-3)}
+  .hero-copy{color:var(--text-2);font-size:19px;word-break:keep-all;border-left:2px solid var(--red);padding-left:20px}
+  .hero-copy strong{color:var(--white);font-weight:700}
+  .fade{opacity:0;transform:translateY(10px);transition:opacity .8s ease,transform .8s ease}
+  .fade.on{opacity:1;transform:none}
+  .cta{display:inline-flex;gap:10px;align-items:center;margin-top:30px;text-decoration:none;font-size:18px;
+       border:1px solid #666;padding:12px 24px;background:rgba(0,0,0,.4)}
+  .cta:hover{border-color:var(--white)}
+  .cta span{display:inline-block;animation:bob 1.6s ease-in-out infinite;color:var(--red)}
+  @keyframes bob{50%{transform:translateY(4px)}}
+  #works{scroll-margin-top:64px;padding-top:18px}
+  @media (prefers-reduced-motion:reduce){.intro-photo,.cta span{animation:none}}
+
+  .count{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);
+         padding:10px 0 8px;font-family:var(--f-num);letter-spacing:2px;font-size:20px;color:var(--text-3)}
+  .list{list-style:none;display:flex;flex-direction:column;gap:6px;padding-bottom:48px}
+  .row{display:grid;grid-template-columns:72px 1fr auto 96px 40px;align-items:center;gap:20px;
+       background:var(--card);padding:9px 24px;text-decoration:none;transition:background .15s}
+  .row:hover{background:var(--card-hover)}
+  .row:hover .arrow{color:var(--red);transform:translateX(4px)}
+  .row .no{font-family:var(--f-num);font-size:40px;line-height:1;color:var(--text-3)}
+  .row:hover .no{color:var(--white)}
+  .row .t{font-family:var(--f-title);font-size:26px;line-height:1.3;word-break:keep-all}
+  .row .s{font-size:16px;color:var(--text-2);margin-top:2px;word-break:keep-all}
+  .row .meta{font-size:15px;color:var(--text-3);text-align:right;white-space:nowrap}
+  .row .meta b{font-family:var(--f-num);font-weight:400;font-size:24px;color:var(--text-2);letter-spacing:1px;margin-right:4px}
+  .row .thumb{width:96px;height:58px;object-fit:cover;display:block;filter:grayscale(.35);transition:filter .2s}
+  .row:hover .thumb{filter:none}
+  .row .arrow{font-size:20px;color:#777;transition:transform .15s,color .15s;text-align:center}
+
+  .ftr{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--text-3);font-size:15px}
+
+  /* ---------- Detail ---------- */
+  .detail{display:none}
+  body.is-detail .home{display:none}
+  body.is-detail .detail{display:block}
+  .d-top{padding:20px 0 14px;display:flex;align-items:baseline;gap:18px;flex-wrap:wrap}
+  .d-top .no{font-family:var(--f-num);font-size:48px;line-height:1;color:var(--red)}
+  .d-top h2{font-family:var(--f-title);font-weight:400;font-size:clamp(30px,3.6vw,44px);line-height:1.25;word-break:keep-all}
+  .d-top .s{width:100%;color:var(--text-2);font-size:18px}
+
+  .d-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:32px;padding-bottom:28px;align-items:start}
+
+  /* viewer */
+  .viewer{background:var(--card);padding:18px}
+  .stage{position:relative;background:#050505;height:clamp(320px,calc(100vh - 340px),760px);display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .stage img{max-width:100%;max-height:100%;object-fit:contain;display:block;user-select:none}
+  .nav-btn{position:absolute;top:50%;transform:translateY(-50%);width:56px;height:56px;border-radius:50%;
+           background:rgba(0,0,0,.6);border:1px solid #555;font-size:24px;display:flex;align-items:center;justify-content:center}
+  .nav-btn:hover{border-color:var(--white);background:rgba(0,0,0,.85)}
+  .nav-btn:disabled{opacity:.25;cursor:default}
+  .nav-btn.prev{left:12px}.nav-btn.next{right:12px}
+  .v-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:14px;flex-wrap:wrap}
+  .v-cap{font-size:17px;color:var(--text-2)}
+  .v-count{font-family:var(--f-num);font-size:26px;letter-spacing:1px}
+  .v-count span{color:var(--text-3)}
+  .strip{display:flex;gap:8px;overflow-x:auto;margin-top:12px;padding-bottom:6px;scrollbar-width:thin}
+  .strip button{flex:0 0 auto;border:2px solid transparent;opacity:.5;transition:opacity .15s}
+  .strip button:hover{opacity:.85}
+  .strip button.on{border-color:var(--red);opacity:1}
+  .strip img{height:48px;display:block}
+  #linkSlot{display:flex;justify-content:center}
+  .play-link{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--red);color:#fff;
+    width:30%;min-width:180px;text-decoration:none;font-family:var(--f-title);font-size:17px;padding:10px 14px;margin-top:14px;transition:filter .15s}
+  .play-link:hover{filter:brightness(1.15)}
+  .play-link small{display:none}
+  .viewer.single .nav-btn,.viewer.single .strip,.viewer.single .hint,.viewer.single .v-count{display:none}
+  .video-slot video{width:100%;max-height:calc(100vh - 300px);display:block;background:#000}
+  .viewer.is-video .stage,.viewer.is-video .strip,.viewer.is-video .hint{display:none}
+  .hint{font-size:15px;color:var(--text-3);margin-top:6px}
+
+  .audio{display:flex;align-items:center;gap:16px;background:#0a0a0a;border:1px solid var(--line);padding:8px 14px;margin-bottom:10px;flex-wrap:wrap}
+  .audio .lbl{font-family:var(--f-title);font-size:20px}
+  .audio .lbl small{display:block;font-family:var(--f-body);font-size:14px;color:var(--text-3)}
+  .audio audio{flex:1;min-width:240px;height:44px}
+
+  /* intent panel */
+  .intent{background:var(--card);padding:30px 30px 34px;position:sticky;top:90px}
+  .tag{display:inline-block;font-size:14px;border:1px solid var(--red);color:#ff8a8a;padding:2px 10px;margin-bottom:18px}
+  .intent h3{font-family:var(--f-num);font-weight:400;letter-spacing:3px;font-size:22px;color:var(--text-3);margin:0 0 6px}
+  .intent h3:not(:first-of-type){margin-top:26px}
+  .intent p{color:var(--text-2);word-break:keep-all}
+  .intent p + p{margin-top:12px}
+  .intent .lead{font-family:var(--f-title);font-size:24px;line-height:1.45;color:var(--white);word-break:keep-all}
+  .facts{list-style:none;border-top:1px solid var(--line);margin-top:26px;padding-top:16px;font-size:16px}
+  .facts li{display:flex;gap:14px;padding:4px 0;color:var(--text-2)}
+  .facts li b{min-width:72px;color:var(--text-3);font-weight:500}
+  .todo{color:#777;font-style:italic}
+
+  .d-nav{display:flex;justify-content:space-between;gap:12px;border-top:1px solid var(--line);padding:22px 0 48px}
+  .d-nav a{text-decoration:none;font-size:17px;color:var(--text-2);max-width:48%}
+  .d-nav a:hover{color:var(--white)}
+  .d-nav a small{display:block;font-family:var(--f-num);letter-spacing:2px;color:var(--text-3);font-size:16px}
+  .d-nav .nx{text-align:right;margin-left:auto}
+
+  @media (max-width:900px){
+    .intro-photo{right:0;left:0;width:100%;max-width:none;height:auto;aspect-ratio:auto;-webkit-mask-image:none;mask-image:none;background-position:center 10%}
+
+    .intro-shade{background:linear-gradient(0deg,#000 0%,rgba(0,0,0,.85) 40%,rgba(0,0,0,.15) 75%,rgba(0,0,0,.3) 100%)}
+    .intro-txt{right:28px;bottom:8vh}
+    .d-grid{grid-template-columns:1fr}
+    .intent{position:static}
+    .stage{height:min(62vh,560px)}
+  }
+  @media (max-width:640px){
+    .wrap,.hdr-in{padding-left:18px;padding-right:18px}
+    .intro-txt{left:18px;right:18px}
+    .intro-title{font-size:min(8.6vw,40px)}
+    .intro-photo{bottom:42%;background-position:center 20%}
+    .hero-copy{font-size:17px}
+    .row{grid-template-columns:48px 1fr 28px;gap:12px;padding:14px 16px}
+    .row .meta,.row .thumb{display:none}
+    .row .no{font-size:32px}
+    .row .t{font-size:22px}
+    .nav-btn{width:46px;height:46px}
+    .intent{padding:24px 20px}
+  }
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-in">
+    <a class="logo" href="#" aria-label="처음으로">MY <b>AI</b> LIFE</a>
+    <a class="hdr-btn" id="hdrBtn" href="#">전체 목록</a>
+  </div>
+</header>
+
+<!-- ================= HOME (1뎁스) ================= -->
+<main class="home">
+
+  <section class="intro" id="intro">
+    <div class="intro-photo" aria-hidden="true"></div>
+    <canvas id="drops" aria-hidden="true"></canvas>
+    <div class="intro-shade" aria-hidden="true"></div>
+    <div class="intro-txt">
+      <div class="eyebrow">AI CONTENT PORTFOLIO</div>
+      <h1 class="intro-title">
+        <span class="ln" data-t="내 삶을 풍성하게 하는" data-hl="삶,풍성" data-hlc="green"></span>
+        <span class="ln" data-t="AI 콘텐츠 만들기" data-hl="AI" data-hlc="red"></span>
+      </h1>
+      <p class="hero-copy fade">
+        회사에서는 남을 움직여 일했습니다.<br>
+        지금은 <strong>내 손으로 한 땀 한 땀</strong> 만들어 내 삶에 씁니다.<br>
+        완성도보다 중요한 건, 직접 한 번 해보는 것.
+      </p>
+      <a class="cta fade" href="#works" id="ctaBtn">작품 둘러보기 <span>▼</span></a>
+    </div>
+  </section>
+
+  <div class="wrap" id="works">
+  <div class="count"><span>7 WORKS</span><span>디지털융합과정 산출물</span></div>
+  <ol class="list" id="list"></ol>
+
+  <footer class="ftr">© 2026 정지현. All Rights Reserved.<br>무단 전재·복제·배포를 금합니다 · All content is protected.</footer>
+  </div>
+</main>
+
+<!-- ================= DETAIL ================= -->
+<main class="detail wrap" id="detail">
+  <div class="d-top">
+    <span class="no" id="dNo"></span>
+    <h2 id="dTitle"></h2>
+    <p class="s" id="dSub"></p>
+  </div>
+  <div class="d-grid">
+    <section class="viewer" aria-label="작품 보기">
+      <div id="audioSlot"></div>
+      <div id="videoSlot" class="video-slot"></div>
+      <div class="stage">
+        <img id="vImg" alt="">
+        <button class="nav-btn prev" id="vPrev" aria-label="이전">‹</button>
+        <button class="nav-btn next" id="vNext" aria-label="다음">›</button>
+      </div>
+      <div id="linkSlot"></div>
+      <div class="v-bar">
+        <span class="v-cap" id="vCap"></span>
+        <span class="v-count" id="vCount"></span>
+      </div>
+      <div class="strip" id="vStrip"></div>
+      <p class="hint">좌우 화살표 버튼이나 키보드 ← → 로 넘겨 보세요.</p>
+    </section>
+    <aside class="intent" id="intent"></aside>
+  </div>
+  <nav class="d-nav" id="dNav"></nav>
+</main>
+
+<script>
+/* =========================================================
+   작품 데이터 — 기획의도(intent) 문장은 모두 '샘플'입니다.
+   대표님이 아래 intent 부분의 글만 고치시면 됩니다.
+   ========================================================= */
+const bookPages = ['cover'].concat(Array.from({length:22},(_,i)=>i+1)).concat(['back']);
+
+const WORKS = [
+  {
+    id:'work-1', title:'그림책 창작', sub:'에뜨왈의 꿈',
+    type:'그림동화책', thumb:'img/book_00.jpg',
+    slides: bookPages.map((p,i)=>({src:`img/book_${String(i).padStart(2,'0')}.jpg`,
+             cap: p==='cover'?'앞표지': p==='back'?'뒤표지': `${p}페이지`})),
+    unit:'쪽',
+    facts:[['구성','앞표지 · 본문 22쪽 · 뒤표지'],['크리에이터','정지현, 홍영은'],['사용 도구','ChatGPT: 스토리라인, 캐릭터 이미지\nClaude: 캐릭터별 스토리라인, 장면별 상세 스토리라인']],
+    intent:{
+      lead:'꿈은 반드시 이루어집니다. 때로는 생각지 못한 방식으로',
+      what:'별을 수놓아 만든 코트 ‘에뜨왈’이 쇼윈도와 할인 매대, 창고를 거쳐 태워질 뻔하다가, 서하를 만나 다시 별이 되는 이야기입니다.',
+      why:'패션 회사에 근무하면서 옷이 기획될 때부터 누군가에게 입히거나, 그렇지 못하고 소각되기까지의 과정이 어쩌면 인생과 비슷하다고 생각되었습니다. 이름과 가격으로 평가받던 시간이 지나도, 나를 알아봐 주는 사람을 만나면 다시 빛날 수 있다는 이야기를 그림책으로 남기고 싶었습니다.'
+    }
+  },
+  {
+    id:'work-2', title:'독서모임 발표', sub:'책 『괴테는 모든 것을 말했다』 — 만화로 보는 책 요약',
+    type:'발표 자료 (PDF)', thumb:'img/goethe-01.jpg',
+    slides: Array.from({length:11},(_,i)=>({src:`img/goethe-${String(i+1).padStart(2,'0')}.jpg`,cap:`${i+1}쪽`})),
+    unit:'쪽',
+    facts:[['구성','발표 자료 11쪽'],['책','스즈키 유이 『괴테는 모든 것을 말했다』'],['사용 도구','이미지: ChatGPT']],
+    intent:{
+      lead:'단조로운 줄거리 설명보다 직관적인 장면으로 임팩트 있게!',
+      what:'독서모임에서 발표하려고 만든 책 요약 자료입니다. 작가 소개, 인물 관계도, 장면별 줄거리를 만화 그림과 함께 정리했습니다.',
+      why:'함께 읽는 사람들이 책의 흐름을 한눈에 따라올 수 있도록, 글로만 정리하던 요약을 그림으로 보여주고 싶었습니다.'
+    }
+  },
+  {
+    id:'work-3', title:'가족간 사랑 표현', sub:'그림일기 & 노래 「군인의 길」',
+    type:'그림 · 그림일기 · 음악', thumb:'img/diary_page2.jpg',
+    audio:{src:'media/song.mp3', title:'군인의 길', note:'SUNO로 만든 노래'},
+    slides:[{src:'img/diary_character.jpg',cap:'캐릭터 — 대한민국 장교'},{src:'img/diary_page2.jpg',cap:'그림일기 2페이지 — 임관식'}],
+    unit:'장',
+    facts:[['구성','캐릭터 이미지 1 · 그림일기 1 · 노래 1곡'],['사용 도구','음악: SUNO, 이미지: ChatGPT']],
+    intent:{
+      lead:'쑥스러워 못 했던 말을, 그림과 노래로 표현합니다.',
+      what:'아들의 임관식을 축하하며 만든 캐릭터와 그림일기, 그리고 노래 「군인의 길」입니다.',
+      why:'자랑스럽고 고마운 마음을 말로 다 전하기 어려워, 그날의 기억을 그림일기와 노래로 남겨 선물하고 싶었습니다.'
+    }
+  },
+  {
+    id:'work-4', title:'짧은 주장', sub:'AI 때문에 불안하신가요? — 카드뉴스 6장',
+    type:'카드뉴스', thumb:'img/card_1.jpg',
+    slides: Array.from({length:6},(_,i)=>({src:`img/card_${i+1}.jpg`,cap:`${i+1}장`})),
+    unit:'장',
+    facts:[['구성','카드뉴스 6장'],['사용 도구','이미지: ChatGPT']],
+    intent:{
+      lead:'완벽하게 준비하기보다, 오늘 작은 것 하나부터.',
+      what:'AI 변화 앞에서 불안해하는 직장인에게, 거창한 도입보다 작은 업무 하나부터 AI와 대화해 보자고 제안하는 카드뉴스입니다.',
+      why:'하고 싶은 말을 짧고 분명하게 전하는 연습으로, 하나의 주장을 6장의 흐름으로 정리해 보았습니다.'
+    }
+  },
+  {
+    id:'work-5', title:'비즈니스 브랜드 만들기', sub:'비건 스킨케어 — 패키지 목업 & 쇼핑몰 배너',
+    type:'패키지 목업 1 · 배너 3', thumb:'img/brand_banner2.jpg',
+    slides:[
+      {src:'img/brand_package.jpg',cap:'패키지 목업 — 신상 화장품 패키지'},
+      {src:'img/brand_banner1.jpg',cap:'배너 1 — 햇살을 담은 비건 선 에센스'},
+      {src:'img/brand_banner2.jpg',cap:'배너 2 — 햇살 아래 비건 톤업 선케어 순간'},
+      {src:'img/brand_banner3.jpg',cap:'배너 3 — 햇살 아래 편안한 톤업 선 에센스'}
+    ],
+    unit:'장',
+    facts:[['구성','패키지 목업 1장 · 쇼핑몰 배너 3장'],['사용 도구','이미지: ChatGPT, 기획: Gemini (제미나이)']],
+    intent:{
+      lead:'내가 만든 브랜드라면, 어떤 얼굴로 손님을 맞을까.',
+      what:'비건 스킨케어 제품을 가정하고 패키지 목업과 쇼핑몰 배너를 만들었습니다. 같은 제품을 세로형·가로형 배너로 다르게 표현해 보았습니다.',
+      why:'작은 가게나 개인 브랜드를 시작한다면 무엇부터 보여줘야 할지, 직접 만들어 보며 감을 익히고 싶었습니다.'
+    }
+  },
+  {
+    id:'work-6', title:'영상 만들기', sub:'뒤집힌 양말',
+    type:'짧은 영상', thumb:'img/video_poster.jpg',
+    video:{src:'media/socks.mp4', poster:'img/video_poster.jpg', length:'0:31'},
+    slides:[],
+    facts:[['구성','영상 1편 (31초)'],['사용 도구','Google Flow']],
+    sample:true,
+    intent:{
+      lead:'같이 사는 건, 서로의 수고를 알아가는 일',
+      what:'뒤집힌 채 빨래 바구니에 들어온 양말을 두고, 엄마와 아들이 서로의 수고를 알게 되는 짧은 영상입니다.',
+      why:'잔소리 대신 이야기로, 매일 반복되는 집안일 속 작은 마음을 가족과 나누고 싶었습니다.'
+    }
+  },
+  {
+    id:'work-7', title:'영타 연습 게임 만들기', sub:'타자 속도 연습기 — 바이브 코딩으로 만든 웹 게임',
+    type:'웹 게임', thumb:'img/game_1.jpg',
+    link:{url:'https://jeanjeong1995.github.io/typing-speed/', label:'게임 하러 가기'},
+    slides:[{src:'img/game_1.jpg',cap:'게임 첫 화면 — 문장 따라 치기 · WPM · 정확도 · 기록'}],
+    unit:'',
+    facts:[['구성','웹 게임 1개 (문장 따라 치기, 속도·정확도 측정, 기록 저장)'],['사용 도구','Claude Code (바이브 코딩)'],['주소','jeanjeong1995.github.io/typing-speed']],
+    intent:{
+      lead:'내게 필요한 연습 도구, 직접 만들어 씁니다.',
+      what:'영어 문장을 따라 치며 속도(WPM)와 정확도를 재고, 최근 기록을 남겨 주는 영어 타자 연습 게임입니다.',
+      why:'HTML 코딩을 하면서 영어 타자 속도가 느려, 빨리 치는 연습을 하고 싶었습니다. 제 업무와 관련된 영어 문장도 익히고 타자 속도도 높일 겸, 영타 게임을 직접 만들었습니다.'
+    }
+  }
+];
+
+/* ---------- 홈 리스트 ---------- */
+const listEl = document.getElementById('list');
+WORKS.forEach((w,i)=>{
+  const li=document.createElement('li');
+  li.innerHTML=`<a class="row" href="#${w.id}">
+      <span class="no">${String(i+1).padStart(2,'0')}</span>
+      <span><div class="t">${w.title}</div><div class="s">${w.sub}</div></span>
+      <span class="meta">${w.video?`<b>${w.video.length}</b>`:w.link?`<b>PLAY</b>`:`<b>${w.slides.length}</b>${w.unit}`}<br>${w.type}</span>
+      <img class="thumb" src="${w.thumb}" alt="" loading="lazy">
+      <span class="arrow">▶</span></a>`;
+  listEl.appendChild(li);
+});
+
+/* ---------- 상세 ---------- */
+let cur=null, idx=0;
+const $=id=>document.getElementById(id);
+
+function renderDetail(w){
+  cur=w; idx=0;
+  const n=WORKS.indexOf(w);
+  $('dNo').textContent=String(n+1).padStart(2,'0');
+  $('dTitle').textContent=w.title;
+  $('dSub').textContent=w.sub;
+  document.title=`${w.title} — 내 삶을 풍성하게 하는 AI 콘텐츠 만들기`;
+
+  $('linkSlot').innerHTML = w.link ? `<a class="play-link" href="${w.link.url}" target="_blank" rel="noopener" title="새 창에서 열려요">▶ ${w.link.label} ↗</a>` : '';
+  $('audioSlot').innerHTML = w.audio ? `<div class="audio">
+      <div class="lbl">♪ ${w.audio.title}<small>${w.audio.note}</small></div>
+      <audio controls preload="metadata" src="${w.audio.src}"></audio></div>` : '';
+
+  const isVid=!!w.video;
+  document.querySelector('.viewer').classList.toggle('is-video',isVid);
+  document.querySelector('.viewer').classList.toggle('single',!isVid && w.slides.length===1);
+  $('videoSlot').innerHTML = isVid ? `<video controls playsinline preload="metadata" poster="${w.video.poster}" src="${w.video.src}"></video>` : '';
+  $('vStrip').innerHTML = w.slides.map((s,i)=>`<button data-i="${i}" aria-label="${s.cap}"><img src="${s.src}" alt="" loading="lazy"></button>`).join('');
+  $('vStrip').querySelectorAll('button').forEach(b=>b.onclick=()=>go(+b.dataset.i));
+
+  const f=w.facts.map(([k,v])=>`<li><b>${k}</b><span>${v?v.replace(/\n/g,'<br>'):'<span class="todo">작성 예정</span>'}</span></li>`).join('');
+  $('intent').innerHTML=`${w.sample?'<span class="tag">샘플 문구 · 수정 예정</span>':''}
+      <h3>ONE LINE</h3><p class="lead">${w.intent.lead}</p>
+      <h3>무엇을 만들었나</h3><p>${w.intent.what}</p>
+      <h3>기획의도</h3><p>${w.intent.why}</p>
+      <ul class="facts">${f}</ul>`;
+
+  const prev=WORKS[n-1], next=WORKS[n+1];
+  $('dNav').innerHTML=(prev?`<a href="#${prev.id}"><small>← PREV</small>${prev.title}</a>`:'<span></span>')+
+                      (next?`<a class="nx" href="#${next.id}"><small>NEXT →</small>${next.title}</a>`:`<a class="nx" href="#"><small>LIST →</small>전체 목록으로</a>`);
+  if(isVid){ $('vCap').textContent='▶ 재생 버튼을 눌러 보세요'; $('vCount').innerHTML=`${w.video.length}`; }
+  else go(0);
+  window.scrollTo(0,0);
+}
+function go(i){
+  if(!cur || cur.video) return;
+  idx=Math.max(0,Math.min(cur.slides.length-1,i));
+  const s=cur.slides[idx];
+  const img=$('vImg'); img.src=s.src; img.alt=`${cur.title} ${s.cap}`;
+  $('vCap').textContent=s.cap;
+  $('vCount').innerHTML=`${idx+1} <span>/ ${cur.slides.length}</span>`;
+  $('vPrev').disabled=idx===0; $('vNext').disabled=idx===cur.slides.length-1;
+  $('vStrip').querySelectorAll('button').forEach((b,k)=>b.classList.toggle('on',k===idx));
+  const on=$('vStrip').children[idx]; if(on) on.scrollIntoView({block:'nearest',inline:'center',behavior:'smooth'});
+  const nx=cur.slides[idx+1]; if(nx){const p=new Image(); p.src=nx.src;}
+}
+$('vPrev').onclick=()=>go(idx-1);
+$('vNext').onclick=()=>go(idx+1);
+document.addEventListener('keydown',e=>{
+  if(!document.body.classList.contains('is-detail')) return;
+  if(e.key==='ArrowLeft') go(idx-1);
+  if(e.key==='ArrowRight') go(idx+1);
+});
+/* 터치 스와이프 */
+let sx=null;
+document.querySelector('.stage').addEventListener('touchstart',e=>{sx=e.touches[0].clientX},{passive:true});
+document.querySelector('.stage').addEventListener('touchend',e=>{
+  if(sx===null) return; const dx=e.changedTouches[0].clientX-sx;
+  if(Math.abs(dx)>40) go(idx+(dx<0?1:-1)); sx=null;
+});
+
+/* ---------- 라우팅 (#work-1 …) ---------- */
+function route(){
+  const w=WORKS.find(x=>x.id===location.hash.slice(1));
+  document.querySelectorAll('audio,video').forEach(m=>m.pause());
+  if(w){ document.body.classList.add('is-detail'); renderDetail(w); $('hdrBtn').textContent='← 목록으로'; }
+  else { document.body.classList.remove('is-detail'); cur=null; $('hdrBtn').textContent='전체 목록';
+         document.title='내 삶을 풍성하게 하는 AI 콘텐츠 만들기'; }
+}
+window.addEventListener('hashchange',route);
+route();
+
+/* ---------- 인트로: 제목 한 글자씩 ---------- */
+(function(){
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const chars=[];
+  document.querySelectorAll('.intro-title .ln').forEach(ln=>{
+    const full=ln.dataset.t, on=new Set();
+    (ln.dataset.hl||'').split(',').filter(Boolean).forEach(h=>{const i=full.indexOf(h); if(i>=0) for(let k=i;k<i+h.length;k++) on.add(k);});
+    let pos=0;
+    full.split(' ').forEach((word,wi,arr)=>{
+      const w=document.createElement('span'); w.className='wd';
+      [...word].forEach(c=>{const sp=document.createElement('span'); sp.className='ch'+(on.has(pos)?' '+ln.dataset.hlc:''); sp.textContent=c; w.appendChild(sp); chars.push(sp); pos++;});
+      pos++;
+      ln.appendChild(w); if(wi<arr.length-1) ln.appendChild(document.createTextNode(' '));
+    });
+  });
+  const start = reduce?0:500, step = reduce?0:65;
+  chars.forEach((c,i)=>setTimeout(()=>c.classList.add('on'), start+i*step));
+  const fadeAt = start + chars.length*step + 200;
+  document.querySelectorAll('.intro .fade').forEach((el,i)=>setTimeout(()=>el.classList.add('on'), fadeAt+i*250));
+  document.getElementById('ctaBtn').addEventListener('click',e=>{
+    e.preventDefault(); document.getElementById('works').scrollIntoView({behavior:'smooth'});
+  });
+})();
+
+/* ---------- 인트로: 여기저기서 반짝이는 빛 ---------- */
+(function(){
+  const cv=document.getElementById('drops'); const ctx=cv.getContext('2d');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let W=0,H=0,dpr=1, lights=[], running=true;
+  const TAU=Math.PI*2;
+  function size(){
+    dpr=Math.min(window.devicePixelRatio||1,2);
+    const r=cv.getBoundingClientRect(); W=r.width; H=r.height;
+    cv.width=W*dpr; cv.height=H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
+    const target = Math.round(Math.min(110, W*H/9000));
+    while(lights.length<target) lights.push(make(true));
+    lights.length=Math.min(lights.length,target);
+  }
+  // 빛 하나: 화면 아무 곳에서 나타나 천천히 떠다니며 켜졌다 꺼짐
+  function make(randomPhase, x, y){
+    const star = Math.random()<0.22;                 // 일부는 십자 모양으로 반짝
+    const warm = Math.random()<0.35;                 // 일부는 따뜻한 금빛
+    return {
+      x: x ?? Math.random()*W, y: y ?? Math.random()*H,
+      vx:(Math.random()-.5)*0.18, vy:-0.04-Math.random()*0.16,
+      r: star ? 1.6+Math.random()*1.6 : 0.6+Math.random()*1.6,
+      star, col: warm ? '255,214,150' : '255,255,255',
+      t: randomPhase ? Math.random() : 0,
+      dur: 2.5+Math.random()*4.5,                   // 한 번 반짝이는 데 걸리는 시간(초)
+      peak: 0.45+Math.random()*0.55, rot: Math.random()*TAU, trail:false
+    };
+  }
+  function drawLight(L,a){
+    const glow=L.r*(L.star?11:6);
+    const g=ctx.createRadialGradient(L.x,L.y,0,L.x,L.y,glow);
+    g.addColorStop(0,`rgba(${L.col},${.55*a})`);
+    g.addColorStop(.25,`rgba(${L.col},${.16*a})`);
+    g.addColorStop(1,`rgba(${L.col},0)`);
+    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(L.x,L.y,glow,0,TAU); ctx.fill();
+    ctx.fillStyle=`rgba(255,255,255,${a})`;
+    ctx.beginPath(); ctx.arc(L.x,L.y,L.r,0,TAU); ctx.fill();
+    if(L.star && a>.2){
+      // 부드러운 빛살: 짧고, 가운데서 끝으로 갈수록 흐려짐
+      const len=L.r*(4+5*a);
+      ctx.save(); ctx.translate(L.x,L.y); ctx.rotate(L.rot);
+      for(let k=0;k<2;k++){
+        ctx.rotate(k*Math.PI/2);
+        const lg=ctx.createLinearGradient(-len,0,len,0);
+        lg.addColorStop(0,`rgba(${L.col},0)`);
+        lg.addColorStop(.5,`rgba(${L.col},${.32*a})`);
+        lg.addColorStop(1,`rgba(${L.col},0)`);
+        ctx.fillStyle=lg;
+        ctx.beginPath(); ctx.ellipse(0,0,len,L.r*0.9,0,0,TAU); ctx.fill();
+      }
+      ctx.restore();
+    }
+  }
+  let last=performance.now();
+  function frame(now){
+    if(!running) return;
+    const dt=Math.min(.05,(now-last)/1000); last=now;
+    ctx.clearRect(0,0,W,H);
+    ctx.globalCompositeOperation='lighter';
+    for(let i=lights.length-1;i>=0;i--){
+      const L=lights[i];
+      L.t += dt/L.dur; L.x += L.vx; L.y += L.vy; L.rot += 0.004;
+      if(L.t>=1){ if(L.trail) lights.splice(i,1); else lights[i]=make(false); continue; }
+      // 부드럽게 켜졌다 꺼지기 + 살짝 깜빡임
+      const a = L.peak*Math.pow(Math.sin(Math.PI*L.t),2)*(0.85+0.15*Math.sin(now/120+i));
+      drawLight(L,a);
+    }
+    ctx.globalCompositeOperation='source-over';
+    requestAnimationFrame(frame);
+  }
+  size(); addEventListener('resize',size);
+  // 마우스나 손가락이 지나간 자리에 작은 반짝임
+  const intro=document.getElementById('intro');
+  function sparkleAt(e,n){
+    const r=cv.getBoundingClientRect();
+    for(let k=0;k<n;k++){
+      const L=make(false,e.clientX-r.left+(Math.random()-.5)*30,e.clientY-r.top+(Math.random()-.5)*30);
+      L.trail=true; L.dur=0.9+Math.random()*1.2; lights.push(L);
+    }
+  }
+  intro.addEventListener('pointermove',e=>{ if(Math.random()<.35) sparkleAt(e,1); });
+  intro.addEventListener('pointerdown',e=>sparkleAt(e,10));
+  // 화면에서 안 보이거나 상세 페이지일 때는 멈춤
+  const io=new IntersectionObserver(([en])=>{
+    const vis=en.isIntersecting && !document.body.classList.contains('is-detail');
+    if(vis && !running){running=true;last=performance.now();requestAnimationFrame(frame);} else if(!vis) running=false;
+  });
+  io.observe(intro);
+  if(reduce){ ctx.globalCompositeOperation='lighter'; lights.forEach(L=>drawLight(L,L.peak*.6)); running=false; }
+  else requestAnimationFrame(frame);
+})();
+
+</script>
+</body>
+</html>
